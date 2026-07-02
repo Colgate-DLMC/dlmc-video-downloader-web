@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DLMC Video Downloader Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+
+  <main class="page">
+
+    <!-- Signature element: mascot peeking over the top of the card -->
+    <img
+      src="images/DLMCKilroyMascot_TransparentBG.png"
+      alt="DLMC mascot"
+      class="mascot"
+    >
+
+    <section class="card">
+
+      <header class="card__header">
+        <img
+          src="images/DLMC 1048x250.png"
+          alt="The DLMC"
+          class="card__logo"
+        >
+        <h1 class="card__title">Video Downloader Toolkit </h1>
+        <p class="card__subtitle">
+          Paste a video link, choose what you need, and download it to your computer.
+        </p>
+      </header>
+
+      <!-- URL input -->
+      <label class="field">
+        <span class="field__label">Video URL</span>
+        <input
+          type="url"
+          id="url-input"
+          class="field__input"
+          placeholder="https://www.youtube.com/watch?v=..."
+          autocomplete="off"
+        >
+      </label>
+
+      <!-- Format options -->
+      <fieldset class="options">
+        <legend class="options__legend">What do you want to download?</legend>
+
+        <div class="options__grid" id="format-options">
+          <label class="option">
+            <input type="radio" name="format" value="video_audio" checked>
+            <span class="option__text">Video + Audio</span>
+          </label>
+
+          <label class="option">
+            <input type="radio" name="format" value="video_only">
+            <span class="option__text">Video only (no sound)</span>
+          </label>
+
+          <label class="option">
+            <input type="radio" name="format" value="audio_only">
+            <span class="option__text">Audio only</span>
+          </label>
+        </div>
+
+        <label class="checkbox">
+          <input type="checkbox" id="subtitles-input">
+          <span class="checkbox__text">Include subtitles</span>
+        </label>
+      </fieldset>
+
+      <!-- Action -->
+      <button type="button" id="download-button" class="button">
+        Download
+      </button>
+
+      <!-- Status area: your JS will reveal and fill this -->
+      <section id="status-area" class="status" hidden>
+        <div class="status__header">
+          <span id="status-label" class="status__label">Starting…</span>
+          <span id="status-percent" class="status__percent"></span>
+        </div>
+
+        <div class="status__bar">
+          <div id="status-bar-fill" class="status__bar-fill"></div>
+        </div>
+
+        <!-- The most recent yt-dlp line goes here -->
+        <p id="status-line" class="status__line"></p>
+
+        <!-- The browser handles the download automatically when clicked -->
+        <a href="/download-endpoint" class="download-btn">Download Video</a>
+
+      </section>
+
+    </section>
+
+    <footer class="page__footer">
+      Digital Learning and Media Center
+    </footer>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

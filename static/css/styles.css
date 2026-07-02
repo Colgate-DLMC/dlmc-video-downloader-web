@@ -1,0 +1,275 @@
+/* ---------- Design tokens ---------- */
+:root {
+  --maroon:        #821019;
+  --maroon-dark:   #5e0b12;
+  --maroon-tint:   #f5e7e8;
+  --ink:           #2a2320;
+  --ink-soft:      #6f6763;
+  --paper:         #faf6f0;
+  --card:          #ffffff;
+  --line:          #e9e0d6;
+  --ok:            #2e7d46;
+  --radius:        16px;
+  --shadow:        0 18px 40px -20px rgba(40, 20, 10, 0.35);
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, var(--maroon-tint), transparent 60%),
+    var(--paper);
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 20px 40px;
+  position: relative;
+}
+
+/* ---------- Signature: mascot peeking over the card ---------- */
+.mascot {
+  width: 190px;
+  height: auto;
+  display: block;
+  margin-bottom: -34px;   /* pulls the card up so the mascot "holds" it */
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 12px rgba(40, 20, 10, 0.18));
+}
+
+/* ---------- Card ---------- */
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px 32px 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.card__header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.card__logo {
+  width: 220px;
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto 14px;
+  display: block;
+}
+
+.card__title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 0 0 6px;
+  color: var(--maroon);
+  letter-spacing: -0.01em;
+}
+
+.card__subtitle {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* ---------- Fields ---------- */
+.field {
+  display: block;
+  margin-bottom: 22px;
+}
+
+.field__label,
+.options__legend {
+  display: block;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.field__input {
+  width: 100%;
+  padding: 13px 15px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px var(--maroon-tint);
+}
+
+/* ---------- Options ---------- */
+.options {
+  border: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+.options__grid {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.option:hover { border-color: var(--maroon); }
+
+.option:has(input:checked) {
+  border-color: var(--maroon);
+  background: var(--maroon-tint);
+}
+
+.option input { accent-color: var(--maroon); width: 16px; height: 16px; }
+.option__text { font-size: 0.95rem; }
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 4px 2px;
+}
+.checkbox input { accent-color: var(--maroon); width: 16px; height: 16px; }
+
+/* ---------- Button ---------- */
+.button {
+  width: 100%;
+  padding: 14px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+  background: var(--maroon);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.button:hover { background: var(--maroon-dark); }
+.button:active { transform: translateY(1px); }
+.button:disabled { background: var(--ink-soft); cursor: not-allowed; opacity: 0.7; }
+
+/* ---------- Status area ---------- */
+.status {
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.status__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.status__label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.status__percent {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.status__bar {
+  width: 100%;
+  height: 8px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.status__bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--maroon);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.status__line {
+  margin: 12px 0 0;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  word-break: break-all;
+  min-height: 1.2em;
+}
+
+.status__download {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  padding: 13px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #fff;
+  background: var(--ok);
+  border-radius: 10px;
+  text-decoration: none;
+}
+.status__download:hover { filter: brightness(0.94); }
+
+/* ---------- States your JS will toggle ---------- */
+.status.is-error .status__label { color: var(--maroon); }
+.status.is-error .status__bar-fill { background: var(--maroon); }
+.status.is-done .status__bar-fill { background: var(--ok); }
+
+/* ---------- Footer ---------- */
+.page__footer {
+  margin-top: 28px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Motion preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
