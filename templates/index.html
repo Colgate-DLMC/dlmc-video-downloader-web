@@ -15,7 +15,7 @@
 
     <!-- Signature element: mascot peeking over the top of the card -->
     <img
-      src="images/DLMCKilroyMascot_TransparentBG.png"
+      src="/static/images/dlmc-mascot.png"
       alt="DLMC mascot"
       class="mascot"
     >
@@ -24,7 +24,7 @@
 
       <header class="card__header">
         <img
-          src="images/DLMC 1048x250.png"
+          src="/static/images/dlmc-banner.png"
           alt="The DLMC"
           class="card__logo"
         >
@@ -92,8 +92,10 @@
         <!-- The most recent yt-dlp line goes here -->
         <p id="status-line" class="status__line"></p>
 
-        <!-- The browser handles the download automatically when clicked -->
-        <a href="/download-endpoint" class="download-btn">Download Video</a>
+        <!-- The finished-file link appears here when status is Done -->
+        <a id="download-link" class="button status__download" href="#" hidden>
+            Save file to your computer
+        </a>
 
       </section>
 

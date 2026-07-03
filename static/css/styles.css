@@ -242,8 +242,12 @@ body {
   min-height: 1.2em;
 }
 
+[hidden] {
+  display: none !important;
+}
 .status__download {
   display: block;
+  width: 100%;
   text-align: center;
   margin-top: 18px;
   padding: 13px 20px;
@@ -251,10 +255,17 @@ body {
   font-weight: 600;
   color: #fff;
   background: var(--ok);
+  border: none;
   border-radius: 10px;
   text-decoration: none;
+  cursor: pointer;
 }
+
 .status__download:hover { filter: brightness(0.94); }
+
+.status__download:active {
+  transform: translateY(1px);
+}
 
 /* ---------- States your JS will toggle ---------- */
 .status.is-error .status__label { color: var(--maroon); }

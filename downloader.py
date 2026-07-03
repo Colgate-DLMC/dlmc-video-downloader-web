@@ -57,7 +57,7 @@ def run_download(url, output_dir, downloads_log, download_id):
 
 
         else:
-            downloads_log[download_id]["status"] = "Error."
+            downloads_log[download_id]["status"] = "error"
             downloads_log[download_id]["error"] = f"yt-dlp failed with exit code {process.returncode}."
             downloads_log[download_id]["log"].append(f"❌ Download failed with exit code {process.returncode} ".strip())
     
