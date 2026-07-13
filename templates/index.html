@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../static/css/styles.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
 
     <!-- Signature element: mascot peeking over the top of the card -->
     <img
-      src="/static/images/dlmc-mascot.png"
+      src="{{ url_for('static', filename='images/dlmc-mascot.png') }}"
       alt="DLMC mascot"
       class="mascot"
     >
@@ -24,11 +24,11 @@
 
       <header class="card__header">
         <img
-          src="/static/images/dlmc-banner.png"
+          src="{{ url_for('static', filename='images/dlmc-banner.png') }}"
           alt="The DLMC"
           class="card__logo"
         >
-        <h1 class="card__title">Video Downloader Toolkit </h1>
+        <h1 class="card__title">Video Downloader Toolkit</h1>
         <p class="card__subtitle">
           Paste a video link, choose what you need, and download it to your computer.
         </p>
@@ -66,17 +66,36 @@
             <span class="option__text">Audio only</span>
           </label>
         </div>
+      </fieldset>
 
-        <label class="checkbox">
-          <input type="checkbox" id="subtitles-input">
-          <span class="checkbox__text">Include subtitles</span>
-        </label>
+      <!-- Subtitle options -->
+      <fieldset class="options">
+        <legend class="options__legend">Subtitles</legend>
+
+        <div class="options__grid" id="subtitle-options">
+          <label class="option">
+            <input type="radio" name="subtitles" value="none" checked>
+            <span class="option__text">No subtitles</span>
+          </label>
+
+          <label class="option" id="subtitle-embed-option">
+            <input type="radio" name="subtitles" value="embed">
+            <span class="option__text">Embed subtitles in video</span>
+          </label>
+
+          <label class="option">
+            <input type="radio" name="subtitles" value="separate">
+            <span class="option__text">Download subtitles as separate file</span>
+          </label>
+        </div>
       </fieldset>
 
       <!-- Action -->
       <button type="button" id="download-button" class="button">
         Download
       </button>
+
+    
 
       <!-- Status area: your JS will reveal and fill this -->
       <section id="status-area" class="status" hidden>
@@ -96,6 +115,10 @@
         <a id="download-link" class="button status__download" href="#" hidden>
             Save file to your computer
         </a>
+         <a id="subtitle-link" class="button status__download" href="#" hidden>
+            Download subtitles
+        </a>
+         
 
       </section>
 

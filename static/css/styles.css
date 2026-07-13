@@ -150,7 +150,7 @@ body {
   border: 1.5px solid var(--line);
   border-radius: 10px;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
 }
 
 .option:hover { border-color: var(--maroon); }
@@ -160,7 +160,16 @@ body {
   background: var(--maroon-tint);
 }
 
+/* Disabled option state — used when audio-only makes "embed subtitles" invalid */
+.option:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--line);
+  background: transparent;
+}
+
 .option input { accent-color: var(--maroon); width: 16px; height: 16px; }
+.option input:disabled { cursor: not-allowed; }
 .option__text { font-size: 0.95rem; }
 
 .checkbox {
