@@ -1,16 +1,21 @@
-/* ---------- Design tokens ---------- */
+/* ---------- Design tokens ----------
+   Colors match Colgate University's official brand palette:
+   Colgate Maroon (primary), Maple Red (accent), Night Black,
+   Shadow Gray, Winter Gray (colgate.edu/identity-guidelines)
+*/
 :root {
-  --maroon:        #821019;
-  --maroon-dark:   #5e0b12;
-  --maroon-tint:   #f5e7e8;
-  --ink:           #2a2320;
-  --ink-soft:      #6f6763;
+  --maroon:        #821019;   /* Colgate Maroon — PMS 202, official primary */
+  --maroon-dark:   #5e0b12;   /* darkened for hover states, not an official token */
+  --maroon-tint:   #f5e7e8;   /* light tint of maroon, for backgrounds/highlights */
+  --maple-red:     #E10028;   /* Maple Red — official secondary accent */
+  --ink:           #000000;   /* Night Black — official secondary */
+  --ink-soft:      #5A646E;   /* Shadow Gray — official secondary */
   --paper:         #faf6f0;
   --card:          #ffffff;
-  --line:          #e9e0d6;
+  --line:          #D2D4D6;   /* Winter Gray — official secondary */
   --ok:            #2e7d46;
   --radius:        16px;
-  --shadow:        0 18px 40px -20px rgba(40, 20, 10, 0.35);
+  --shadow:        0 18px 40px -20px rgba(0, 0, 0, 0.35);
 }
 
 /* ---------- Base ---------- */
@@ -45,11 +50,11 @@ body {
   width: 190px;
   height: auto;
   display: block;
-  margin-bottom: -34px;   /* pulls the card up so the mascot "holds" it */
+  margin-bottom: -34px;
   position: relative;
   z-index: 2;
   pointer-events: none;
-  filter: drop-shadow(0 8px 12px rgba(40, 20, 10, 0.18));
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18));
 }
 
 /* ---------- Card ---------- */
@@ -79,8 +84,9 @@ body {
 }
 
 .card__title {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
+  font-family: 'Fraunces', Georgia, serif; /* stand-in for Colgate's official
+     "Portrait" typeface, which is proprietary and not publicly distributed */
+  font-weight: 600;
   font-size: 1.5rem;
   margin: 0 0 6px;
   color: var(--maroon);
@@ -109,6 +115,15 @@ body {
   letter-spacing: 0.04em;
   color: var(--ink-soft);
   margin-bottom: 8px;
+}
+
+/* Marks an optional field's label as visually secondary — lowercase, no bold,
+   so it doesn't compete with required fields like the URL input */
+.field__label--optional {
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--ink-soft);
 }
 
 .field__input {

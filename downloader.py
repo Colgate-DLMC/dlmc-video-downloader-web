@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
 import subprocess
+from mailer import send_email
+import threading
 
 ffmpeg_path = "ffmpeg"
 yt_dlp_path ="yt_dlp"
@@ -140,6 +142,19 @@ def run_download(command, output_dir, downloads_log, download_id):
                 downloads_log[download_id]["file_path"] = main_files[0]
                 downloads_log[download_id]["subtitle_path"] = sub_files[0] if sub_files else None
                 downloads_log[download_id]["time_completed"] = datetime.now()
+
+                    # Email send thread
+                if downloads_log[download_id]["email"]:
+                    email_thread = threading.Thread(
+                        target = send_email,
+                        daemon=True,
+                        args = (download_id, downloads_log)
+                    ) 
+                    #starts the email send thread
+                    email_thread.start()
+                
+                
+
 
             else:
                 downloads_log[download_id]["status"] = "error"

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, send_file
+from flask import Flask, request, jsonify, render_template, send_file          
 from downloader import run_download
 
 import uuid
@@ -6,13 +6,13 @@ import threading
 import os
 import datetime
 from downloader import  build_command
-
+import re
 app = Flask(__name__)
 
 
 downloads_log= {}
 DOWNLOADS_ROOT = "video_downloads"
-
+EMAIL_PATTERN = re.compile(r'^[\w.+-]+@[\w-]+\.[\w.-]+$')
 
 
 #create video job id
@@ -45,13 +45,19 @@ def start_download():
     format = parse_data_request.get('format')
     subtitles = parse_data_request.get('subtitles')
     command = build_command(url, output_dir, format, subtitles)
+    email = parse_data_request.get('email')
+
+    if email and not EMAIL_PATTERN.match(email):
+        return {"error": "Invalid email format"}, 400
+
 
     #3. create the dict entry
     downloads_log[download_id] = {
         "status": "queued",
         "current_message": "Waiting to start...",
         "log" : [],
-        "file_path" : None,
+        "email" : email,
+        "file_path" : None, 
         "subtitle_path" : None,
         "error" : None,
 

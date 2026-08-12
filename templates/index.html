@@ -6,7 +6,7 @@
   <title>DLMC Video Downloader Toolkit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -33,6 +33,12 @@
           Paste a video link, choose what you need, and download it to your computer.
         </p>
       </header>
+      <!-- Email input box -->
+      <label class="field">
+        <span class="field__label">Email (optional — get notified when it's ready)</span>
+        <input type="email" id="email-input" class="field__input"
+              placeholder="you@colgate.edu" autocomplete="off">
+      </label>
 
       <!-- URL input -->
       <label class="field">
@@ -64,6 +70,11 @@
           <label class="option">
             <input type="radio" name="format" value="audio_only">
             <span class="option__text">Audio only</span>
+          </label>
+
+          <label class="option">
+            <input type="radio" name="format" value="audio_only_wav">
+            <span class="option__text">Audio only (WAV)</span>
           </label>
         </div>
       </fieldset>
