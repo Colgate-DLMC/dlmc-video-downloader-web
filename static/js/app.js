@@ -51,17 +51,36 @@ downloadButton.addEventListener("click", async(event) => {
     const format = document.querySelector('input[name="format"]:checked').value;
     const subtitles = document.querySelector('input[name="subtitles"]:checked').value;
     const email = emailInput.value
-
+    
+    
     const response = await fetch("/download", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, format, subtitles, email })
     });
 
-    //parsed data
-    const data = await response.json();
+    let data;
+    try {
+        data = await response.json();
+    } catch (parseError) {
+        // Body wasn't valid JSON at all (e.g. a raw Flask 500 traceback page)
+        statusLabel.textContent = "Something went wrong. Please try again.";
+        statusArea.hidden = false;
+        downloadButton.disabled = false;
+        return;
+    }
+
+
+
+    if (!response.ok) {
+        statusLabel.textContent = data.error || "Something went wrong. Please try again.";
+        statusArea.hidden = false;
+        downloadButton.disabled = false;
+        return;
+    }
 
     const job_id = data.download_id;
+
 
     //Topic: Polling — check the download's status every 2 seconds
     const pollTimer = setInterval(async () => {

@@ -13,73 +13,65 @@ def build_command(url, output_dir, format_choice, subtitle_choice):
     command = ["yt-dlp"]
 
     if format_choice == "video_audio":
-        video_audio_cmd = [
-            "-f", 
+        command.extend([
+            "-f",
             "bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/best[vcodec^=avc1]/best",
             "--merge-output-format",
             "mp4",
             "--restrict-filenames",
             "-o",
             os.path.join(output_dir, "%(title)s.%(ext)s"),
-            url
-        ]
-        command.extend(video_audio_cmd)
+        ])
 
     elif format_choice == "video_only":
-        video_only_cmd = [
+        command.extend([
             "-f",
             "bestvideo[vcodec^=avc1][ext=mp4]/best[vcodec^=avc1]",
             "--restrict-filenames",
             "-o",
             os.path.join(output_dir, "%(title)s.%(ext)s"),
-            url
-        ]
-        command.extend(video_only_cmd)
+        ])
 
     elif format_choice == "audio_only":
-        audio_only_cmd = [
+        command.extend([
             "-x",
             "--audio-format",
             "mp3",
             "--restrict-filenames",
             "-o",
             os.path.join(output_dir, "%(title)s.%(ext)s"),
-            url
-        ]
-        command.extend(audio_only_cmd)
+        ])
 
-    #For future wav file
-    # elif format_choice == "audio_only_wav":
-    #     audio_only_cmd = [
-    #         "-x",
-    #         "--audio-format",
-    #         "wav",
-    #         "--restrict-filenames",
-    #         "-o",
-    #         os.path.join(output_dir, "%(title)s.%(ext)s"),
-    #         url
-    #     ]
-    #     command.extend(audio_only_cmd)
+    elif format_choice == "audio_only_wav":
+        command.extend([
+            "-x",
+            "--audio-format",
+            "wav",
+            "--restrict-filenames",
+            "-o",
+            os.path.join(output_dir, "%(title)s.%(ext)s"),
+        ])
 
     if subtitle_choice == "none":
         pass
-
     elif subtitle_choice == "embed":
-        embed_cmd = [
+        command.extend([
             "--write-subs",
             "--write-auto-subs",
-            "--embed-subs"
-        ]
-        command.extend(embed_cmd)
-
+            "--embed-subs",
+        ])
     elif subtitle_choice == "separate":
-        separate_cmd = [
+        command.extend([
             "--write-subs",
             "--write-auto-subs",
-        ]
-        command.extend(separate_cmd)
+        ])
 
-
+    # url is untrusted input. "--" tells yt-dlp's argument parser that
+    # everything after this point is positional data, never a flag —
+    # even if url is literally the string "--exec=...". This must be
+    # the LAST thing appended, after every flag, so nothing downstream
+    # of it accidentally gets swallowed as "positional data" too.
+    command.extend(["--", url])
 
     return command
 
