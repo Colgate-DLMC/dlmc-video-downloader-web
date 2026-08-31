@@ -5,3 +5,8 @@ __pycache__/
 
 downloads/*
 !downloads/.gitkeep
+video_downloads/*
+video_downloads/*
+!video_downloads/.gitkeep
+credentials.json
+token.json
