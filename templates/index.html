@@ -13,6 +13,56 @@
 
   <main class="page">
 
+    <div class="layout">
+
+    <!-- Left sidebar -->
+    <aside class="sidebar">
+      <h2 class="sidebar__heading">Who is this for?</h2>
+      <ul class="sidebar__list">
+        <li class="sidebar__item">
+          <span class="sidebar__icon">🎬</span>
+          <div>
+            <strong>Media students</strong>
+            <p>Grab footage, music, and sound effects for class video projects — no terminal needed.</p>
+          </div>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__icon">🎵</span>
+          <div>
+            <strong>Audio editors</strong>
+            <p>Download tracks as WAV for lossless quality, or MP3 for quick background music.</p>
+          </div>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__icon">🎓</span>
+          <div>
+            <strong>Faculty</strong>
+            <p>Save publicly available lectures, documentaries, or course materials for classroom use.</p>
+          </div>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__icon">📝</span>
+          <div>
+            <strong>Caption editors</strong>
+            <p>Download subtitles as a separate file or embedded — ready to import into Premiere.</p>
+          </div>
+
+          
+        </li>
+
+        <li class="sidebar__item">
+          <span class="sidebar__icon">🌐</span>
+          <div>
+            <strong>Supported sites</strong>
+            <p>YouTube, TikTok, SoundCloud, Twitch, Vimeo, Dailymotion, Reddit, Bandcamp, and many more public platforms.</p>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Card column -->
+    <div class="card-column">
+
     <!-- Signature element: mascot peeking over the top of the card -->
     <img
       src="{{ url_for('static', filename='images/dlmc-mascot.png') }}"
@@ -100,7 +150,11 @@
           </label>
         </div>
       </fieldset>
-
+      
+      <!-- Usage notice -->
+      <p class="usage-notice">
+        ⚠️ For academic and educational use only. Please ensure you have the right to download any content before doing so.
+      </p>
       <!-- Action -->
       <button type="button" id="download-button" class="button">
         Download
@@ -134,6 +188,9 @@
       </section>
 
     </section>
+
+    </div> <!-- /.card-column -->
+    </div> <!-- /.layout -->
 
     <footer class="page__footer">
       Digital Learning and Media Center

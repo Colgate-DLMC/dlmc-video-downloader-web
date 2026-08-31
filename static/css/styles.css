@@ -41,8 +41,91 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 96px 20px 40px;
+  padding: 60px 20px 40px;
   position: relative;
+}
+
+/* ---------- Two-column layout ---------- */
+.layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  width: 100%;
+  max-width: 820px;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  padding-top: 48px; /* visually aligns with card content below mascot */
+}
+
+.sidebar__heading {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--maroon);
+  margin: 0 0 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.sidebar__icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.sidebar__item strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.sidebar__item p {
+  margin: 0;
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+/* ---------- Card column ---------- */
+.card-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- Mobile: stack sidebar above card ---------- */
+@media (max-width: 720px) {
+  .layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 480px;
+    padding-top: 0;
+  }
 }
 
 /* ---------- Signature: mascot peeking over the card ---------- */
@@ -302,6 +385,15 @@ body {
   font-size: 0.82rem;
   color: var(--ink-soft);
   letter-spacing: 0.02em;
+}
+
+.usage-notice {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--maroon);
+  padding: 8px 12px;
+  margin: 0 0 20px;
+  line-height: 1.5;
 }
 
 /* ---------- Motion preference ---------- */

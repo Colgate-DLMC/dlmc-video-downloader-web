@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify, render_template, send_file          
 from downloader import run_download
+from concurrent.futures import ThreadPoolExecutor
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 import uuid
 import threading
@@ -7,8 +10,21 @@ import os
 import datetime
 from downloader import  build_command
 import re
+from mailer import send_email
+
+
+
 app = Flask(__name__)
 
+
+# This single object manages BOTH the 5 active slots AND the invisible waiting queue
+executor = ThreadPoolExecutor(max_workers=5) 
+
+limiter = Limiter(
+    get_remote_address,   # tells Flask-Limiter to key limits by request.remote_addr
+    app=app,
+    default_limits=[]     # no global default — we'll set it per-route below
+)
 
 downloads_log= {}
 DOWNLOADS_ROOT = "video_downloads"
@@ -24,8 +40,11 @@ def create_unique_id():
 def index():
     return render_template("index.html")
 
+
+
 #route to start a download
 @app.route("/download", methods= ["POST"])
+@limiter.limit("10 per minute")
 def start_download():
     #Steps to get video url
 
@@ -41,7 +60,7 @@ def start_download():
     output_dir = os.path.join(DOWNLOADS_ROOT, download_id)
     os.makedirs(output_dir, exist_ok=True)
 
-    #5 grab format elements for build command
+    #5 grab format elements for build command + grab email
     format = parse_data_request.get('format')
     subtitles = parse_data_request.get('subtitles')
     command = build_command(url, output_dir, format, subtitles)
@@ -51,33 +70,42 @@ def start_download():
         return {"error": "Invalid email format"}, 400
 
 
-    #3. create the dict entry
+    # 1. Initialize the log entry exactly ONCE here in the main route.
+    # This immediately saves the state as "queued" while it waits for a thread.
     downloads_log[download_id] = {
         "status": "queued",
         "current_message": "Waiting to start...",
-        "log" : [],
-        "email" : email,
-        "file_path" : None, 
-        "subtitle_path" : None,
-        "error" : None,
-
+        "log": [],
+        "email": email,
+        "file_path": None,
+        "subtitle_path": None,
+        "error": None,
     }
-    
 
-    # start background thread
-    download_thread = threading.Thread(
-        target = run_download,
-        daemon=True,
-        args = (command, output_dir, downloads_log, download_id)
+    # 2. Submits the job to the thread pool executor
+    executor.submit(
+        handle_background_download,
+        download_id,
+        command,
+        output_dir,
+        downloads_log
     )
-    #start the download via thread
-    download_thread.start()
 
-    #below is important because it is the first response my backend sends back to the front end after starting the download job 
+
     return jsonify({
-        "download_id": download_id, 
-        "status": "downloading"
+        "download_id": download_id,
+        "status": "queued" 
     })
+
+def handle_background_download(download_id, command, output_dir, downloads_log):
+    # The exact millisecond a worker is free and picks up this task, 
+    # i dynamically flip the status to "downloading".
+    if download_id in downloads_log:
+        downloads_log[download_id]["status"] = "downloading"
+        downloads_log[download_id]["current_message"] = "Download started..."
+
+    # Calls the actual heavy yt-dlp download function
+    run_download(command, output_dir, downloads_log, download_id)
 
 
 #route to show status  
@@ -112,4 +140,5 @@ def get_finished_file(download_id, file_type='main'):
     return send_file(file_path, as_attachment=True) #sends as a downloadable attachment
  
 if __name__ == "__main__":
-    app.run(debug=True)
+    is_production = os.environ.get("ENV") == "production"
+    app.run(debug=not is_production, port=5001)
