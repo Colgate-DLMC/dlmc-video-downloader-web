@@ -3,6 +3,7 @@ from downloader import run_download
 from concurrent.futures import ThreadPoolExecutor
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from urllib.parse import urlparse
 
 import uuid
 import threading
@@ -35,6 +36,14 @@ EMAIL_PATTERN = re.compile(r'^[\w.+-]+@[\w-]+\.[\w.-]+$')
 def create_unique_id():
     return str(uuid.uuid4())
 
+def validate_url(url_string):
+    # Parse the URL
+    parsed_url = urlparse(url_string)
+    # Check scheme requirements
+    if parsed_url.scheme not in ('http', 'https') or not parsed_url.netloc:
+        return False
+    return True
+
 #route to launch the webpage
 @app.route("/")
 def index():
@@ -46,15 +55,15 @@ def index():
 @app.route("/download", methods= ["POST"])
 @limiter.limit("10 per minute")
 def start_download():
-    #Steps to get video url
-
-    #1. Parse the incoming JSON data
     parse_data_request = request.get_json()
-    #2. Access the element like a standard python dictionary
     url = parse_data_request.get('url')
+
+    #URL scheme allowlist
+    if not validate_url(url):
+        return jsonify({"error": "Invalid URL scheme or missing host"}), 400
+
     #3 create unique ID for THIS download
     download_id = create_unique_id()
-    
 
     #4 create video download output directory for that id
     output_dir = os.path.join(DOWNLOADS_ROOT, download_id)
@@ -68,6 +77,7 @@ def start_download():
 
     if email and not EMAIL_PATTERN.match(email):
         return {"error": "Invalid email format"}, 400
+
 
 
     # 1. Initialize the log entry exactly ONCE here in the main route.

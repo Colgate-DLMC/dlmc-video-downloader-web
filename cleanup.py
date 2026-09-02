@@ -2,7 +2,10 @@ import os
 import time
 import shutil
 
-folder = "/home/tobiloba/Desktop/DLMC-projects/dlmc-video-downloader-web/video_downloads"
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Dynamic path to the downloads folder
+folder = os.path.join(base_dir, "video_downloads")
 
 if os.path.exists(folder):
     now = time.time()
@@ -11,5 +14,5 @@ if os.path.exists(folder):
 
 
         if os.path.isdir(file_path):
-            if now - os.path.getmtime(file_path) > 3600:
+            if now - os.path.getmtime(file_path) > 86400:
                 shutil.rmtree(file_path)
