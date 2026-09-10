@@ -400,3 +400,38 @@ body {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* ---------- Subtitle language detection ---------- */
+.detect-result {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+}
+
+.detect-result__message {
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.detect-result__list {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Found vs not-found coloring, same pattern as .status.is-done / .status.is-error */
+.detect-result.is-found .detect-result__message { color: var(--ok); }
+.detect-result.is-not-found .detect-result__message { color: var(--maroon); }
+
+/* "Detect" button reuses .button but sits smaller, secondary to the main Download action */
+#detect-button {
+  background: var(--ink-soft);
+  margin-top: 4px;
+}
+
+#detect-button:hover { background: var(--ink); }

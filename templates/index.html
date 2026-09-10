@@ -44,7 +44,7 @@
           <span class="sidebar__icon">📝</span>
           <div>
             <strong>Caption editors</strong>
-            <p>Download subtitles as a separate file or embedded — ready to import into Premiere.</p>
+            <p>Download subtitles as a separate file or embedded — ready to import into Adope Premiere or other video editors.</p>
           </div>
 
           
@@ -148,6 +148,47 @@
             <input type="radio" name="subtitles" value="separate">
             <span class="option__text">Download subtitles as separate file</span>
           </label>
+        </div>
+      </fieldset>
+
+      <!-- Subtitle language detection — only relevant when subtitles are requested.
+           Sits as its own fieldset, NOT nested inside the subtitle options grid,
+           so it doesn't break the .options__grid card layout above. -->
+      <fieldset class="options" id="language-detect-section" hidden>
+        <legend class="options__legend">Check subtitle language</legend>
+
+        <label class="field">
+          <span class="field__label field__label--optional">Language code (e.g. en, es, fr, ja)</span>
+          <input
+            type="text"
+            id="language-input"
+            class="field__input"
+            list="common-languages"
+            placeholder="en"
+            autocomplete="off"
+          >
+          <datalist id="common-languages">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="zh">Chinese</option>
+            <option value="pt">Portuguese</option>
+            <option value="ar">Arabic</option>
+            <option value="hi">Hindi</option>
+          </datalist>
+        </label>
+
+        <button type="button" id="detect-button" class="button">
+          Detect
+        </button>
+
+        <!-- Result of the detection check — your JS will reveal and fill this -->
+        <div id="detect-result" class="detect-result" hidden>
+          <p id="detect-result-message" class="detect-result__message"></p>
+          <p id="detect-result-list" class="detect-result__list"></p>
         </div>
       </fieldset>
       

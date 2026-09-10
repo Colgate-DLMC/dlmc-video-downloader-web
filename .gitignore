@@ -10,3 +10,4 @@ video_downloads/*
 !video_downloads/.gitkeep
 credentials.json
 token.json
+cookies.txt

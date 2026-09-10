@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template, send_file          
-from downloader import run_download
+from downloader import run_download, build_command, check_language_available
 from concurrent.futures import ThreadPoolExecutor
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -9,7 +9,6 @@ import uuid
 import threading
 import os
 import datetime
-from downloader import  build_command
 import re
 from mailer import send_email
 
@@ -70,9 +69,11 @@ def start_download():
     os.makedirs(output_dir, exist_ok=True)
 
     #5 grab format elements for build command + grab email
+    
     format = parse_data_request.get('format')
     subtitles = parse_data_request.get('subtitles')
-    command = build_command(url, output_dir, format, subtitles)
+    language = parse_data_request.get('language')
+    command = build_command(url, output_dir, format, subtitles, language)
     email = parse_data_request.get('email')
 
     if email and not EMAIL_PATTERN.match(email):
@@ -148,6 +149,26 @@ def get_finished_file(download_id, file_type='main'):
         return jsonify({"error" : "File not Found"}), 404
     
     return send_file(file_path, as_attachment=True) #sends as a downloadable attachment
+
+
+@app.route("/detect-subtitles", methods=["POST"])
+@limiter.limit("10 per minute")
+def detect_subtitles():
+    parse_data_request = request.get_json()
+    url = parse_data_request.get("url")
+    language_code = parse_data_request.get("language_code")
+ 
+    if not validate_url(url):
+        return jsonify({"error": "Invalid URL scheme or missing host"}), 400
+ 
+    if not language_code:
+        return jsonify({"error": "language_code is required"}), 400
+ 
+    try:
+        result = check_language_available(url, language_code)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Could not check subtitle availability: {str(e)}"}), 500
  
 if __name__ == "__main__":
     is_production = os.environ.get("ENV") == "production"

@@ -3,19 +3,79 @@ from datetime import datetime
 import subprocess
 from mailer import send_email
 import threading
+import yt_dlp
 
 ffmpeg_path = "ffmpeg"
 yt_dlp_path ="yt_dlp"
+YTDLP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv", "bin", "yt-dlp")
+
+ 
+def detect_subtitle_languages(url):
+    """
+    Queries yt-dlp for available subtitles on a video WITHOUT downloading it.
+    Returns a dict with manual and auto-generated caption language codes,
+    plus the full list of unique languages available (either type).
+    """
+    ydl_opts = {
+        "skip_download": True,
+        "quiet": True,
+        "no_warnings": True,
+        "cookiesfrombrowser": ("chrome",),
+        "extractor_args": {"youtube": {"player_client": ["ios"]}},
+    }
+ 
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+ 
+    manual_subs = info.get("subtitles", {})       # official/manual captions
+    auto_subs = info.get("automatic_captions", {}) # auto-generated captions
+ 
+    manual_langs = sorted(manual_subs.keys())
+    auto_langs = sorted(auto_subs.keys())
+    all_langs = sorted(set(manual_langs) | set(auto_langs))
+ 
+    return {
+        "manual_languages": manual_langs,
+        "auto_languages": auto_langs,
+        "all_available_languages": all_langs,
+    }
+ 
+ 
+def check_language_available(url, language_code):
+    """
+    Checks whether a SPECIFIC language is available for a video,
+    and whether it's manual, auto-generated, both, or not found.
+    """
+    result = detect_subtitle_languages(url)
+ 
+    has_manual = language_code in result["manual_languages"]
+    has_auto = language_code in result["auto_languages"]
+ 
+    if has_manual and has_auto:
+        found_as = "both"
+    elif has_manual:
+        found_as = "manual"
+    elif has_auto:
+        found_as = "auto"
+    else:
+        found_as = None
+ 
+    return {
+        "language_code": language_code,
+        "found": found_as is not None,
+        "found_as": found_as,  # "manual", "auto", "both", or None
+        "all_available_languages": result["all_available_languages"],
+    }
 
 
 
-def build_command(url, output_dir, format_choice, subtitle_choice):
-    command = ["yt-dlp"]
+def build_command(url, output_dir, format_choice, subtitle_choice, language=None):
+    command = [YTDLP_PATH, "--cookies", "cookies.txt"]
 
     if format_choice == "video_audio":
         command.extend([
             "-f",
-            "bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/best[vcodec^=avc1]/best",
+            "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
             "--merge-output-format",
             "mp4",
             "--restrict-filenames",
@@ -60,11 +120,16 @@ def build_command(url, output_dir, format_choice, subtitle_choice):
             "--write-auto-subs",
             "--embed-subs",
         ])
+        if language:
+            command.extend(["--sub-langs", language])
+
     elif subtitle_choice == "separate":
         command.extend([
             "--write-subs",
             "--write-auto-subs",
         ])
+        if language:
+            command.extend(["--sub-langs", language])
 
     # url is untrusted input. "--" tells yt-dlp's argument parser that
     # everything after this point is positional data, never a flag —
