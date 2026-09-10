@@ -11,3 +11,8 @@ video_downloads/*
 credentials.json
 token.json
 cookies.txt
+*.mp4
+*.webm
+*.mp3
+*.wav
+test/
