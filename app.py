@@ -29,6 +29,7 @@ limiter = Limiter(
 downloads_log= {}
 DOWNLOADS_ROOT = "video_downloads"
 EMAIL_PATTERN = re.compile(r'^[\w.+-]+@[\w-]+\.[\w.-]+$')
+LANGUAGE_CODE_PATTERN = re.compile(r'^[a-zA-Z]{2,3}(-[a-zA-Z0-9]+)?$')
 
 
 #create video job id
@@ -73,6 +74,9 @@ def start_download():
     format = parse_data_request.get('format')
     subtitles = parse_data_request.get('subtitles')
     language = parse_data_request.get('language')
+    if language and not LANGUAGE_CODE_PATTERN.match(language):
+        return jsonify({"error": "Invalid language code format"}), 400
+
     command = build_command(url, output_dir, format, subtitles, language)
     email = parse_data_request.get('email')
 
@@ -157,12 +161,16 @@ def detect_subtitles():
     parse_data_request = request.get_json()
     url = parse_data_request.get("url")
     language_code = parse_data_request.get("language_code")
- 
-    if not validate_url(url):
-        return jsonify({"error": "Invalid URL scheme or missing host"}), 400
- 
+
+
     if not language_code:
         return jsonify({"error": "language_code is required"}), 400
+
+    if not LANGUAGE_CODE_PATTERN.match(language_code):
+        return jsonify({"error": "Invalid language code format"}), 400
+
+    if not validate_url(url):
+        return jsonify({"error": "Invalid URL scheme or missing host"}), 400
  
     try:
         result = check_language_available(url, language_code)

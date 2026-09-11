@@ -4,10 +4,12 @@ import subprocess
 from mailer import send_email
 import threading
 import yt_dlp
+import re
 
 ffmpeg_path = "ffmpeg"
 yt_dlp_path ="yt_dlp"
 YTDLP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv", "bin", "yt-dlp")
+LANGUAGE_CODE_PATTERN = re.compile(r'^[a-zA-Z]{2,3}(-[a-zA-Z0-9]+)?$')
 
  
 def detect_subtitle_languages(url):
@@ -20,8 +22,7 @@ def detect_subtitle_languages(url):
         "skip_download": True,
         "quiet": True,
         "no_warnings": True,
-        "cookiesfrombrowser": ("chrome",),
-        "extractor_args": {"youtube": {"player_client": ["ios"]}},
+
     }
  
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -131,11 +132,6 @@ def build_command(url, output_dir, format_choice, subtitle_choice, language=None
         if language:
             command.extend(["--sub-langs", language])
 
-    # url is untrusted input. "--" tells yt-dlp's argument parser that
-    # everything after this point is positional data, never a flag —
-    # even if url is literally the string "--exec=...". This must be
-    # the LAST thing appended, after every flag, so nothing downstream
-    # of it accidentally gets swallowed as "positional data" too.
     command.extend(["--", url])
 
     return command
